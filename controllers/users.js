@@ -10,6 +10,7 @@ const validationErrorHandler = (err, res) => {
 
 
 const getUsers = async (req, res) => {
+  const id = res.params;
   try {
     const users = await User.find({});
     return res.status(200).json(users);
@@ -20,15 +21,15 @@ const getUsers = async (req, res) => {
   }
 }
 const getUser = async (req, res) => {
+  const { userId } = req.params;
   try {
-    const { userId } = req.params;
     const user = await User.findById(userId);
-    if (!user) {
-      return res.status(404).json({ message: 'Такого пользователя нет' });
-    }
     return res.status(200).json(user);
   }
   catch (err) {
+    if (!userId) {
+      return res.status(404).json({ message: 'Такого пользователя нет' });
+    }
     console.error(err);
     return res.status(500).json({ message: 'Ошибка сервера' });
   }
@@ -36,7 +37,7 @@ const getUser = async (req, res) => {
 const createUser = async (req, res) => {
   const { name, about, avatar } = req.body;
   try {
-    await User.create({ name, about, avatar },{new: true});
+    await User.create({ name, about, avatar });
     return res.status(201).json({message: 'ошибка создания пользователя'});
   }
   catch (err) {
