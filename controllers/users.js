@@ -56,7 +56,7 @@ const updateProfile = async (req, res) => {
       id,
       { name, about }
     )
-    return res.status(200).json({message: `${res.message}`});
+    return res.status(200).json(user);
   }
   catch (err) {
     validationErrorHandler(err, res);
