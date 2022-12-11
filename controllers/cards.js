@@ -50,6 +50,9 @@ const addLikeCard = async (req, res) => {
       { $addToSet: { likes: req.user._id } },
       { new: true, runValidators: true },
     )
+    if (!likeCard) {
+      return res.status(400).json({message: 'ошибка при лайке'});
+    }
     return res.status(201).json(likeCard);
   }
   catch (err) {
