@@ -13,7 +13,7 @@ app.use(bodyParser.json());
 
 app.use((req, res, next) => {
   req.user = {
-    _id: '639376d66f0c0a4026b9d176', // вставьте сюда _id созданного в предыдущем пункте пользователя
+    _id: '639376d66f0c0a4026b9d176',
   };
   next();
 });
