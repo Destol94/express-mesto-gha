@@ -37,19 +37,11 @@ const deleteCard = async (req, res) => {
     if (!card) {
       return res.status(404).json({message: 'такой карточки нет'});
     }
-    // if(card.owner === id) {
-    //   await Card.delete({card});
-    //   return res.status(201).json({message: 'карта удалена'});
-    // }
     await Card.findByIdAndRemove(cardId);
     return res.status(200).json(card);
   }
   catch (err) {
-    if (!id) {
-      return res.status(404).json({ message: `${err.message}` })
-    }
-    console.error(err);
-    return res.status(500).json({ message: 'Ошибка при удалении карточки' });
+    errorHandler(err, res);
   }
 }
 const addLikeCard = async (req, res) => {
