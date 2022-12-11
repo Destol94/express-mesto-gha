@@ -48,7 +48,7 @@ const addLikeCard = async (req, res) => {
     const likeCard = await Card.findByIdAndUpdate(
       id,
       { $addToSet: { likes: req.params } },
-      { new: true, runValidators: true },
+      { new: true, runValidators: true, upsert: true },
     )
     if (!likeCard) {
       return res.status(400).json({message: 'ошибка при лайке'});
