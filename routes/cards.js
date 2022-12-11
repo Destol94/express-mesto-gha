@@ -5,7 +5,7 @@ const { getCards, createCard, deleteCard, addLikeCard, removeLikeCard } = requir
 router.get('/', getCards);
 router.delete('/:cardId', deleteCard);
 router.post('/', createCard);
-router.put(':cardId/likes', addLikeCard);
-router.delete(':cardId/likes', removeLikeCard);
+router.put('/:cardId/likes', addLikeCard);
+router.delete('/:cardId/likes', removeLikeCard);
 
 module.exports = router;

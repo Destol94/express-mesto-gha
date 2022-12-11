@@ -67,9 +67,6 @@ const removeLikeCard = async (req, res) => {
     return res.status(201).json(emptyLike);
   }
   catch (err) {
-    if (!id) {
-      return res.status(404).json({message: `${err.message}`})
-    }
     errorHandler(err, res);
   }
 }
