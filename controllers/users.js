@@ -37,7 +37,7 @@ const createUser = async (req, res) => {
   const { name, about, avatar } = req.body;
   try {
     const user = await User.create({ name, about, avatar });
-    return res.status(201).json(user);
+    return res.status(201).json({message: `${res.message}`});
   }
   catch (err) {
     validationErrorHandler(err, res);
@@ -51,7 +51,7 @@ const updateProfile = async (req, res) => {
       id,
       { name, about }
     )
-    return res.status(201).json(user);
+    return res.status(200).json({message: `${res.message}`});
   }
   catch (err) {
     validationErrorHandler(err, res);
