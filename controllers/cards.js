@@ -29,9 +29,10 @@ const createCard = async (req, res) => {
   }
 }
 const deleteCard = async (req, res) => {
-  const { id } = req.params;
+  const {cardId} = req.params;
+  const id = req.user._id;
   try {
-    const deletCard = await Card.delete(req.body);
+    const deletCard = await Card.delete({cardId});
     return res.status(201).json(deletCard);
   }
   catch (err) {
