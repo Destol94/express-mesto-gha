@@ -27,7 +27,8 @@ const getUser = async (req, res) => {
     return res.status(200).json(user);
   }
   catch (err) {
-    if (!userId) {
+    console.log(err.name);
+    if (err.name === 'CastError') {
       return res.status(404).json({ message: 'Такого пользователя нет' });
     }
     console.error(err);
