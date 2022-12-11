@@ -1,3 +1,4 @@
+const { json } = require('body-parser');
 const Card = require('../models/card');
 
 const errorHandler = (err, res) => {
@@ -29,11 +30,19 @@ const createCard = async (req, res) => {
   }
 }
 const deleteCard = async (req, res) => {
-  const {cardId} = req.params;
+  const { cardId } = req.params;
   const id = req.user._id;
   try {
-    const deletCard = await Card.delete({cardId});
-    return res.status(201).json(deletCard);
+    const card = await Card.findById(cardId);
+    if (!card) {
+      return res.status(404).json({message: 'такой карточки нет'});
+    }
+    // if(card.owner === id) {
+    //   await Card.delete({card});
+    //   return res.status(201).json({message: 'карта удалена'});
+    // }
+    await Card.delete(cardId);
+    return res.status(200).json(card);
   }
   catch (err) {
     if (!id) {
@@ -44,7 +53,7 @@ const deleteCard = async (req, res) => {
   }
 }
 const addLikeCard = async (req, res) => {
-  const {cardId} = req.params;
+  const { cardId } = req.params;
   console.log(cardId);
   try {
     const likeCard = await Card.findByIdAndUpdate(
@@ -53,7 +62,7 @@ const addLikeCard = async (req, res) => {
       { new: true }
     )
     if (!likeCard) {
-      return res.status(404).json({message: 'ошибка при лайке'});
+      return res.status(404).json({ message: 'ошибка при лайке' });
     }
     return res.status(201).json(likeCard);
   }
@@ -63,7 +72,7 @@ const addLikeCard = async (req, res) => {
   }
 }
 const removeLikeCard = async (req, res) => {
-  const {cardId} = req.params;
+  const { cardId } = req.params;
   try {
     const emptyLike = await Card.findByIdAndUpdate(
       cardId,
@@ -71,7 +80,7 @@ const removeLikeCard = async (req, res) => {
       { new: true }
     )
     if (!emptyLike) {
-      return res.status(404).json({message: 'ошибка при лайке'});
+      return res.status(404).json({ message: 'ошибка при лайке' });
     }
     return res.status(200).json(emptyLike);
   }
