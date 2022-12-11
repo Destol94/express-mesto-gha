@@ -52,7 +52,7 @@ const addLikeCard = async (req, res) => {
       { new: true }
     )
     if (!likeCard) {
-      return res.status(400).json({message: 'ошибка при лайке'});
+      return res.status(404).json({message: 'ошибка при лайке'});
     }
     return res.status(201).json(likeCard);
   }
@@ -70,9 +70,9 @@ const removeLikeCard = async (req, res) => {
       { new: true }
     )
     if (!emptyLike) {
-      return res.status(400).json({message: 'ошибка при лайке'});
+      return res.status(404).json({message: 'ошибка при лайке'});
     }
-    return res.status(201).json(emptyLike);
+    return res.status(200).json(emptyLike);
   }
   catch (err) {
     errorHandler(err, res);
