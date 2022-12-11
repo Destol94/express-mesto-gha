@@ -25,7 +25,7 @@ const getUser = async (req, res) => {
   try {
     const user = await User.findById(userId);
     if (!user) {
-      return res.status(404).json({message: 'пользователя не существует'});
+      return res.status(404).json({ message: 'пользователя не существует' });
     }
     return res.status(200).json(user);
   }
@@ -54,7 +54,11 @@ const updateProfile = async (req, res) => {
   try {
     const user = await User.findByIdAndUpdate(
       id,
-      { name, about }
+      { name, about },
+      {
+        new: true,
+        runValidators: true
+      }
     )
     return res.status(200).json(user);
   }
@@ -74,7 +78,7 @@ const updateAvatar = async (req, res) => {
   }
   catch (err) {
     if (!id) {
-      res.status(404).json({message: `${err.message}`});
+      res.status(404).json({ message: `${err.message}` });
     }
     validationErrorHandler(err, res);
   }
