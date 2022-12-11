@@ -72,14 +72,12 @@ const updateAvatar = async (req, res) => {
   try {
     const user = await User.findByIdAndUpdate(
       id,
-      { avatar }
+      { avatar },
+      { new: true, runValidators: true }
     )
     return res.status(201).json(user);
   }
   catch (err) {
-    if (!id) {
-      res.status(404).json({ message: `${err.message}` });
-    }
     validationErrorHandler(err, res);
   }
 }
