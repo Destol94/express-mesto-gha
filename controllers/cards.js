@@ -43,12 +43,13 @@ const deleteCard = async (req, res) => {
   }
 }
 const addLikeCard = async (req, res) => {
-  const id = req.params;
+  const {cardId} = req.params;
+  console.log(cardId);
   try {
     const likeCard = await Card.findByIdAndUpdate(
-      id,
-      { $addToSet: { likes: req.params } },
-      { new: true, runValidators: true, upsert: true },
+      cardId,
+      { $addToSet: { likes: req.user._id } },
+      { new: true }
     )
     if (!likeCard) {
       return res.status(400).json({message: 'ошибка при лайке'});
@@ -56,16 +57,17 @@ const addLikeCard = async (req, res) => {
     return res.status(201).json(likeCard);
   }
   catch (err) {
+    console.log(err);
     errorHandler(err, res);
   }
 }
 const removeLikeCard = async (req, res) => {
-  const id = req.params;
+  const {cardId} = req.params;
   try {
     const emptyLike = await Card.findByIdAndUpdate(
-      id,
-      { $pull: { likes: req.params } },
-      { new: true, runValidators: true }
+      cardId,
+      { $pull: { likes: req.user._id } },
+      { new: true }
     )
     if (!emptyLike) {
       return res.status(400).json({message: 'ошибка при лайке'});

@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { ObjectId } = require('mongoose/lib/types');
 
 const cardScheme = new mongoose.Schema({
   name: {
@@ -15,10 +16,10 @@ const cardScheme = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     required: true,
   },
-  likes: {
-    type: Array,
+  likes: [{
+    type: ObjectId,
     default: [],
-  },
+  }],
   createdAt: {
     type: Date,
     default: Date.now,
