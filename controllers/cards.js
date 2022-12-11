@@ -1,8 +1,8 @@
 const Card = require('../models/card');
 
 const errorHandler = (err, res) => {
-  if(err.name === 'ValidationError' || err.name === 'CastError') {
-    return res.status(400).json({message: `${err.message}`});
+  if (err.name === 'ValidationError' || err.name === 'CastError') {
+    return res.status(400).json({ message: `${err.message}` });
   }
   return res.status(500).json({ message: 'Ошибка при создании карточки' });
 }
@@ -36,7 +36,7 @@ const deleteCard = async (req, res) => {
   }
   catch (err) {
     if (!id) {
-      return res.status(404).json({message: `${err.message}`})
+      return res.status(404).json({ message: `${err.message}` })
     }
     console.error(err);
     return res.status(500).json({ message: 'Ошибка при удалении карточки' });
@@ -47,8 +47,8 @@ const addLikeCard = async (req, res) => {
   try {
     const likeCard = await Card.findByIdAndUpdate(
       id,
-      { $addToSet: { likes: req.user._id } }, // добавить _id в массив, если его там нет
-      { new: true },
+      { $addToSet: { likes: req.user._id } },
+      { new: true, runValidators: true },
     )
     return res.status(201).json(likeCard);
   }
@@ -62,7 +62,7 @@ const removeLikeCard = async (req, res) => {
     const emptyLike = await Card.findByIdAndUpdate(
       id,
       { $pull: { likes: req.user._id } }, // убрать _id из массива
-      { new: true }
+      { new: true, runValidators: true }
     )
     return res.status(201).json(emptyLike);
   }
