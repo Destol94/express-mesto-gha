@@ -34,9 +34,9 @@ const getUser = async (req, res) => {
   }
 }
 const createUser = async (req, res) => {
-  const { name, about } = req.body;
+  const { name, about, avatar } = req.body;
   try {
-    const user = await User.create({ name, about });
+    const user = await User.create({ name, about, avatar });
     return res.status(201).json(user);
   }
   catch (err) {
