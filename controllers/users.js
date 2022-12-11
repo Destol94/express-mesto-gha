@@ -24,12 +24,15 @@ const getUser = async (req, res) => {
   const { userId } = req.params;
   try {
     const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({message: 'пользователя не существует'});
+    }
     return res.status(200).json(user);
   }
   catch (err) {
     console.log(err.name);
     if (err.name === 'CastError') {
-      return res.status(404).json({ message: 'Такого пользователя нет' });
+      return res.status(400).json({ message: 'Такого пользователя нет' });
     }
     console.error(err);
     return res.status(500).json({ message: 'Ошибка сервера' });
