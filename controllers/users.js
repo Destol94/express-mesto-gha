@@ -37,7 +37,7 @@ const createUser = async (req, res) => {
   const { name, about, avatar } = req.body;
   try {
     const user = await User.create({ name, about, avatar });
-    return res.status(201).json({message: `${res.message}`});
+    return res.status(201).json({message: 'ошибка создания пользователя'});
   }
   catch (err) {
     validationErrorHandler(err, res);
