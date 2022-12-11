@@ -2,7 +2,7 @@ const Card = require('../models/card');
 
 const errorHandler = (err, res) => {
   if(err.name === 'ValidationError' || err.name === 'CastError') {
-    return res.status(400).json({message: `${err.message}`});
+    return res.status(404).json({message: `${err.message}`});
   }
   return res.status(500).json({ message: 'Ошибка при создании карточки' });
 }
