@@ -43,7 +43,7 @@ const deleteCard = async (req, res) => {
   }
 }
 const addLikeCard = async (req, res) => {
-  const id = req.user._id;
+  const id = req.params;
   try {
     const likeCard = await Card.findByIdAndUpdate(
       id,
@@ -60,13 +60,16 @@ const addLikeCard = async (req, res) => {
   }
 }
 const removeLikeCard = async (req, res) => {
-  const id = req.user._id;
+  const id = req.params;
   try {
     const emptyLike = await Card.findByIdAndUpdate(
       id,
       { $pull: { likes: req.user._id } }, // убрать _id из массива
       { new: true, runValidators: true }
     )
+    if (!emptyLike) {
+      return res.status(400).json({message: 'ошибка при лайке'});
+    }
     return res.status(201).json(emptyLike);
   }
   catch (err) {
