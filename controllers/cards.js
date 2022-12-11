@@ -47,7 +47,7 @@ const addLikeCard = async (req, res) => {
   try {
     const likeCard = await Card.findByIdAndUpdate(
       id,
-      { $addToSet: { likes: req.user._id } },
+      { $addToSet: { likes: req.params } },
       { new: true, runValidators: true },
     )
     if (!likeCard) {
@@ -64,7 +64,7 @@ const removeLikeCard = async (req, res) => {
   try {
     const emptyLike = await Card.findByIdAndUpdate(
       id,
-      { $pull: { likes: req.user._id } }, // убрать _id из массива
+      { $pull: { likes: req.params } },
       { new: true, runValidators: true }
     )
     if (!emptyLike) {
