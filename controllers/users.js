@@ -75,7 +75,7 @@ const updateAvatar = async (req, res) => {
       { avatar },
       { new: true, runValidators: true }
     )
-    return res.status(201).json(user);
+    return res.status(200).json(user);
   }
   catch (err) {
     validationErrorHandler(err, res);
