@@ -6,6 +6,8 @@
       {
         "allow": ["_id"]
       }
-    ]
+    ],
+    "no-console": "off",
+    "consistent-return": "off"
   }
 }

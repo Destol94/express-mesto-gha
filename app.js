@@ -28,11 +28,9 @@ mongoose.connect(
   },
   () => {
     app.listen(PORT, () => {
-      // eslint-disable-next-line no-console
       console.log(`Приложение слушает порт ${PORT}`);
     });
   },
 );
 const db = mongoose.connection;
-// eslint-disable-next-line no-console
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
