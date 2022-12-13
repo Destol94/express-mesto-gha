@@ -1,22 +1,20 @@
 const Card = require('../models/card');
-const {
-  validError, notFoundItem, defaultError, ERROR_CODE, ERROR_CODE_NOT_FOUND, ERROR_CODE_SERVER,
-} = require('../utils/constants');
+const error = require('../utils/constants');
 
 const errorHandler = (err, res) => {
   if (err.name === 'ValidationError' || err.name === 'CastError') {
-    return res.status(ERROR_CODE).json({ message: validError });
+    return res.status(error.ERROR_CODE).json({ message: error.validError });
   }
-  return res.status(ERROR_CODE_SERVER).json({ message: defaultError });
+  return res.status(error.ERROR_CODE_SERVER).json({ message: error.defaultError });
 };
 
 const getCards = async (req, res) => {
   try {
     const cards = await Card.find({}).populate(['owner', 'likes']);
-    return res.status(200).json(cards);
+    return res.status(error.CODE_SUCCESS).json(cards);
   } catch (err) {
     console.error(err);
-    return res.status(ERROR_CODE_SERVER).json({ message: defaultError });
+    return res.status(error.ERROR_CODE_SERVER).json({ message: error.defaultError });
   }
 };
 
@@ -35,10 +33,10 @@ const deleteCard = async (req, res) => {
   try {
     const card = await Card.findById(cardId);
     if (!card) {
-      return res.status(ERROR_CODE_NOT_FOUND).json({ message: notFoundItem });
+      return res.status(error.ERROR_CODE_NOT_FOUND).json({ message: error.notFoundItem });
     }
     await Card.findByIdAndRemove(cardId);
-    return res.status(200).json(card);
+    return res.status(error.CODE_SUCCESS).json(card);
   } catch (err) {
     errorHandler(err, res);
   }
@@ -54,7 +52,7 @@ const addLikeCard = async (req, res) => {
       { new: true },
     );
     if (!likeCard) {
-      return res.status(ERROR_CODE_NOT_FOUND).json({ message: notFoundItem });
+      return res.status(error.ERROR_CODE_NOT_FOUND).json({ message: error.notFoundItem });
     }
     return res.status(201).json(likeCard);
   } catch (err) {
@@ -72,9 +70,9 @@ const removeLikeCard = async (req, res) => {
       { new: true },
     );
     if (!emptyLike) {
-      return res.status(ERROR_CODE_NOT_FOUND).json({ message: notFoundItem });
+      return res.status(error.ERROR_CODE_NOT_FOUND).json({ message: error.notFoundItem });
     }
-    return res.status(200).json(emptyLike);
+    return res.status(error.CODE_SUCCESS).json(emptyLike);
   } catch (err) {
     errorHandler(err, res);
   }

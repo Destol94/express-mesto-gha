@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const routerUser = require('./routes/users');
 const routerCard = require('./routes/cards');
+const { ERROR_CODE_NOT_FOUND } = require('./utils/constants');
 
 const { PORT = 3000 } = process.env;
 
@@ -17,7 +18,7 @@ app.use((req, res, next) => {
 app.use('/users', routerUser);
 app.use('/cards', routerCard);
 app.use('*', (req, res) => {
-  res.status(404).json({ message: 'Страница не найдена' });
+  res.status(ERROR_CODE_NOT_FOUND).json({ message: 'Страница не найдена' });
 });
 
 mongoose.set('strictQuery', true);

@@ -1,23 +1,21 @@
 const User = require('../models/user');
-const {
-  validError, notFoundItem, defaultError, ERROR_CODE, ERROR_CODE_NOT_FOUND, ERROR_CODE_SERVER,
-} = require('../utils/constants');
+const error = require('../utils/constants');
 
 const validationErrorHandler = (err, res) => {
   console.error(err);
   if (err.name === 'ValidationError') {
-    return res.status(ERROR_CODE).json({ message: validError });
+    return res.status(error.ERROR_CODE).json({ message: error.validError });
   }
-  return res.status(ERROR_CODE_SERVER).json({ message: defaultError });
+  return res.status(error.ERROR_CODE_SERVER).json({ message: error.defaultError });
 };
 
 const getUsers = async (req, res) => {
   try {
     const users = await User.find({});
-    return res.status(200).json(users);
+    return res.status(error.CODE_SUCCESS).json(users);
   } catch (err) {
     console.error(err);
-    return res.status(ERROR_CODE_SERVER).json({ message: defaultError });
+    return res.status(error.ERROR_CODE_SERVER).json({ message: error.defaultError });
   }
 };
 const getUser = async (req, res) => {
@@ -25,16 +23,16 @@ const getUser = async (req, res) => {
   try {
     const user = await User.findById(userId);
     if (!user) {
-      return res.status(ERROR_CODE_NOT_FOUND).json({ message: notFoundItem });
+      return res.status(error.ERROR_CODE_NOT_FOUND).json({ message: error.notFoundItem });
     }
-    return res.status(200).json(user);
+    return res.status(error.CODE_SUCCESS).json(user);
   } catch (err) {
     console.log(err.name);
     if (err.name === 'CastError') {
-      return res.status(ERROR_CODE).json({ message: validError });
+      return res.status(error.ERROR_CODE).json({ message: error.validError });
     }
     console.error(err);
-    return res.status(ERROR_CODE_SERVER).json({ message: defaultError });
+    return res.status(error.ERROR_CODE_SERVER).json({ message: error.defaultError });
   }
 };
 const createUser = async (req, res) => {
@@ -45,9 +43,9 @@ const createUser = async (req, res) => {
   } catch (err) {
     console.error(err);
     if (err.name === 'ValidationError') {
-      return res.status(ERROR_CODE).json({ message: validError });
+      return res.status(error.ERROR_CODE).json({ message: error.validError });
     }
-    return res.status(ERROR_CODE_SERVER).json({ message: defaultError });
+    return res.status(error.ERROR_CODE_SERVER).json({ message: error.defaultError });
   }
 };
 
@@ -63,7 +61,7 @@ const updateProfile = async (req, res) => {
         runValidators: true,
       },
     );
-    return res.status(200).json(user);
+    return res.status(error.CODE_SUCCESS).json(user);
   } catch (err) {
     validationErrorHandler(err, res);
   }
@@ -78,7 +76,7 @@ const updateAvatar = async (req, res) => {
       { avatar },
       { new: true, runValidators: true },
     );
-    return res.status(200).json(user);
+    return res.status(error.CODE_SUCCESS).json(user);
   } catch (err) {
     validationErrorHandler(err, res);
   }
