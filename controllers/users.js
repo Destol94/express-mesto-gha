@@ -1,5 +1,8 @@
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 const error = require('../utils/constants');
+const { generateToken } = require('../utils/token');
 
 const validationErrorHandler = (err, res) => {
   console.error(err);
@@ -36,16 +39,27 @@ const getUser = async (req, res) => {
   }
 };
 const createUser = async (req, res) => {
-  const { name, about, avatar } = req.body;
+  const { email, password, name, about, avatar } = req.body;
   try {
-    const user = await User.create({ name, about, avatar });
-    return res.status(201).json(user);
+    const hash = await bcrypt.hash(password, 10);
+    const user = await User.create({ email, password: hash, name, about, avatar });
+    return res.status(201).json({ _id: user._id });
   } catch (err) {
     console.error(err);
     if (err.name === 'ValidationError') {
       return res.status(error.ERROR_CODE).json({ message: error.validError });
     }
     return res.status(error.ERROR_CODE_SERVER).json({ message: error.defaultError });
+  }
+};
+
+const getInfoAboutMe = async (req, res) => {
+  const { _id } = req.body;
+  try {
+    const user = await User.findOne({ _id });
+    return res.status(error.CODE_SUCCESS).json(user);
+  } catch (err) {
+    validationErrorHandler(err, res);
   }
 };
 
@@ -82,10 +96,31 @@ const updateAvatar = async (req, res) => {
   }
 };
 
+const login = async (req, res) => {
+  const body = { ...req.body };
+  const { email, password } = body;
+  try {
+    const user = await User.findOne({ email }).select('+password');
+    if (!user) {
+      return res.status(401).json({ message: 'неверный пользоваетель или пароль' });
+    }
+    const result = await bcrypt.compare(password, user.password);
+    if (result) {
+      const token = generateToken({ _id: user._id });
+      return res.status(200).json({ token });
+    }
+    return res.status(401).json({ message: 'неверный пользоваетель или пароль' });
+  } catch (err) {
+    return res.status(500).json({ message: 'неверный пользоваетель или пароль' });
+  }
+};
+
 module.exports = {
   getUser,
   getUsers,
+  getInfoAboutMe,
   createUser,
   updateProfile,
   updateAvatar,
+  login,
 };

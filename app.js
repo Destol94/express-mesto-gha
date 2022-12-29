@@ -1,22 +1,30 @@
 const express = require('express');
 const mongoose = require('mongoose');
+require('dotenv').config();
 const routerUser = require('./routes/users');
 const routerCard = require('./routes/cards');
 const { ERROR_CODE_NOT_FOUND } = require('./utils/constants');
+const {
+  createUser, login,
+} = require('./controllers/users');
+const { checkAuth } = require('./middlewares/auth');
 
 const { PORT = 3000 } = process.env;
 
 const app = express();
 app.use(express.json());
 
-app.use((req, res, next) => {
-  req.user = {
-    _id: '639376d66f0c0a4026b9d176',
-  };
-  next();
-});
-app.use('/users', routerUser);
-app.use('/cards', routerCard);
+// app.use((req, res, next) => {
+//   req.user = {
+//     _id: '639376d66f0c0a4026b9d176',
+//   };
+//   next();
+// });
+console.log(process.env.JWT_SECRET);
+app.use('/users', checkAuth, routerUser);
+app.post('/signin', login);
+app.post('/signup', createUser);
+app.use('/cards', checkAuth, routerCard);
 app.use('*', (req, res) => {
   res.status(ERROR_CODE_NOT_FOUND).json({ message: 'Страница не найдена' });
 });

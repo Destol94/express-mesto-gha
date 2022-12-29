@@ -1,5 +1,6 @@
 const Card = require('../models/card');
 const error = require('../utils/constants');
+const { checkToken } = require('../utils/token');
 
 const errorHandler = (err, res) => {
   if (err.name === 'ValidationError' || err.name === 'CastError') {
@@ -19,9 +20,9 @@ const getCards = async (req, res) => {
 };
 
 const createCard = async (req, res) => {
-  const { name, link } = req.body;
+  const { name, link, _id } = req.body;
   try {
-    const card = await Card.create({ name, link, owner: req.user });
+    const card = await Card.create({ name, link, owner: _id });
     return res.status(201).json(card);
   } catch (err) {
     errorHandler(err, res);
@@ -35,13 +36,15 @@ const deleteCard = async (req, res) => {
     if (!card) {
       return res.status(error.ERROR_CODE_NOT_FOUND).json({ message: error.notFoundItem });
     }
-    await Card.findByIdAndRemove(cardId);
-    return res.status(error.CODE_SUCCESS).json(card);
+    if (`"${req.user._id}"` === JSON.stringify(card.owner._id)) {
+      await Card.findByIdAndRemove(cardId);
+      return res.status(error.CODE_SUCCESS).json(card);
+    }
+    return res.status(403).json({ message: 'Ошибка сервера' });
   } catch (err) {
     errorHandler(err, res);
   }
 };
-
 const addLikeCard = async (req, res) => {
   const { cardId } = req.params;
   console.log(cardId);
