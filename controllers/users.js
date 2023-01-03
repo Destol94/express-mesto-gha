@@ -1,5 +1,6 @@
 const bcrypt = require('bcrypt');
 const DocumentNotFoundError = require('../errors/DocumentNotFoundError');
+const ValidationError = require('../errors/ValidationError');
 const Unauthorized = require('../errors/Unauthorized');
 const User = require('../models/user');
 const { generateToken } = require('../utils/token');
@@ -43,6 +44,9 @@ const getInfoAboutMe = async (req, res, next) => {
   const { _id } = req.body;
   try {
     const user = await User.findOne({ _id });
+    if (!user) {
+      throw new ValidationError('Ошибка получения информации о пользователе');
+    }
     return res.status(200).json(user);
   } catch (err) {
     next(err);
