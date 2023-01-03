@@ -33,7 +33,7 @@ const createUser = async (req, res, next) => {
     const user = await User.create({
       email, password: hash, name, about, avatar,
     });
-    return res.status(201).json({ user });
+    return res.status(201).json({ _id: user._id });
   } catch (err) {
     next(err);
   }

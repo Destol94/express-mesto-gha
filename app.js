@@ -4,11 +4,11 @@ require('dotenv').config();
 const { celebrate, Joi, errors } = require('celebrate');
 const routerUser = require('./routes/users');
 const routerCard = require('./routes/cards');
-const { ERROR_CODE_NOT_FOUND } = require('./utils/constants');
 const {
   createUser, login,
 } = require('./controllers/users');
 const { checkAuth } = require('./middlewares/auth');
+const DocumentNotFoundError = require('./errors/DocumentNotFoundError');
 
 const { PORT = 3000 } = process.env;
 
@@ -32,8 +32,8 @@ app.post('/signup', celebrate({
   }),
 }), createUser);
 app.use('/cards', checkAuth, routerCard);
-app.use('*', (req, res) => {
-  res.status(ERROR_CODE_NOT_FOUND).json({ message: 'Страница не найдена' });
+app.use('*', () => {
+  throw new DocumentNotFoundError('Страница не найдена');
 });
 
 app.use(errors());
@@ -41,6 +41,9 @@ app.use(errors());
 app.use((err, req, res, next) => {
   if (err.code === 11000) {
     return res.status(409).json({ message: 'Такой пользователь уже есть' });
+  }
+  if (!err.statusCode) {
+    return res.status(500).json({ message: ' Ошибка сервера' });
   }
   return res.status(err.statusCode).json({ message: err.message });
 });
