@@ -37,7 +37,7 @@ app.use('*', (req, res) => {
 });
 
 app.use(errors());
-app.use((err, req, res, next) => {
+app.use((err, req, res) => {
   if (err.code === 11000) {
     return res.status(409).json({ message: 'Такой пользователь уже есть' });
   }
