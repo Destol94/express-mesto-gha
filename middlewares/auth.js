@@ -6,7 +6,7 @@ function checkAuth(req, res, next) {
   if (req.user) {
     return next();
   }
-  return res.status(403).json({ message: 'Доступ запрещён' });
+  return res.status(401).json({ message: 'Доступ запрещён' });
 }
 
 module.exports = {
