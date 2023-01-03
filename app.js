@@ -37,6 +37,7 @@ app.use('*', (req, res) => {
 });
 
 app.use(errors());
+// eslint-disable-next-line no-unused-vars
 app.use((err, req, res, next) => {
   if (err.code === 11000) {
     return res.status(409).json({ message: 'Такой пользователь уже есть' });
