@@ -10,7 +10,7 @@ const {
 } = require('./controllers/users');
 const { checkAuth } = require('./middlewares/auth');
 
-const { PORT = 3000 } = process.env;
+const { PORT = 30000 } = process.env;
 
 const app = express();
 app.use(express.json());
