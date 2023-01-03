@@ -1,51 +1,42 @@
+const DocumentNotFoundError = require('../errors/DocumentNotFoundError');
 const Card = require('../models/card');
-const error = require('../utils/constants');
-const { checkToken } = require('../utils/token');
 
-const errorHandler = (err, res) => {
-  if (err.name === 'ValidationError' || err.name === 'CastError') {
-    return res.status(error.ERROR_CODE).json({ message: error.validError });
-  }
-  return res.status(error.ERROR_CODE_SERVER).json({ message: error.defaultError });
-};
-
-const getCards = async (req, res) => {
+const getCards = async (req, res, next) => {
   try {
     const cards = await Card.find({}).populate(['owner', 'likes']);
-    return res.status(error.CODE_SUCCESS).json(cards);
+    return res.status(200).json(cards);
   } catch (err) {
-    console.error(err);
-    return res.status(error.ERROR_CODE_SERVER).json({ message: error.defaultError });
+    next(err);
   }
 };
 
-const createCard = async (req, res) => {
+const createCard = async (req, res, next) => {
   const { name, link, _id } = req.body;
   try {
     const card = await Card.create({ name, link, owner: _id });
     return res.status(201).json(card);
   } catch (err) {
-    errorHandler(err, res);
+    next(err);
   }
 };
 
-const deleteCard = async (req, res) => {
+const deleteCard = async (req, res, next) => {
   const { cardId } = req.params;
   try {
     const card = await Card.findById(cardId);
     if (!card) {
-      return res.status(error.ERROR_CODE_NOT_FOUND).json({ message: error.notFoundItem });
+      throw new DocumentNotFoundError('Ошибка удаления карточки');
     }
     if (`"${req.user._id}"` === JSON.stringify(card.owner._id)) {
       await Card.findByIdAndRemove(cardId);
-      return res.status(error.CODE_SUCCESS).json(card);
+      return res.status(200).json(card);
     }
-    return res.status(403).json({ message: 'Ошибка сервера' });
+    throw new Error('Ошибка сервера');
   } catch (err) {
-    errorHandler(err, res);
+    next(err);
   }
 };
-const addLikeCard = async (req, res) => {
+const addLikeCard = async (req, res, next) => {
   const { cardId } = req.params;
   console.log(cardId);
   try {
@@ -55,16 +46,15 @@ const addLikeCard = async (req, res) => {
       { new: true },
     );
     if (!likeCard) {
-      return res.status(error.ERROR_CODE_NOT_FOUND).json({ message: error.notFoundItem });
+      throw new DocumentNotFoundError('Ошибка добавления лайка');
     }
     return res.status(201).json(likeCard);
   } catch (err) {
-    console.log(err);
-    errorHandler(err, res);
+    next(err);
   }
 };
 
-const removeLikeCard = async (req, res) => {
+const removeLikeCard = async (req, res, next) => {
   const { cardId } = req.params;
   try {
     const emptyLike = await Card.findByIdAndUpdate(
@@ -73,11 +63,11 @@ const removeLikeCard = async (req, res) => {
       { new: true },
     );
     if (!emptyLike) {
-      return res.status(error.ERROR_CODE_NOT_FOUND).json({ message: error.notFoundItem });
+      throw new DocumentNotFoundError('Ошибка удаления лайка');
     }
-    return res.status(error.CODE_SUCCESS).json(emptyLike);
+    return res.status(200).json(emptyLike);
   } catch (err) {
-    errorHandler(err, res);
+    next(err);
   }
 };
 
