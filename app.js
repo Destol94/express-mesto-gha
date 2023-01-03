@@ -10,7 +10,7 @@ const {
 } = require('./controllers/users');
 const { checkAuth } = require('./middlewares/auth');
 
-const { PORT = 30000 } = process.env;
+const { PORT = 3000 } = process.env;
 
 const app = express();
 app.use(express.json());
@@ -26,8 +26,8 @@ app.post('/signup', celebrate({
   body: Joi.object().keys({
     email: Joi.string().email().required(),
     password: Joi.string().required(),
-    name: Joi.string().minlength(2).maxlength(30),
-    about: Joi.string().minlength(2).maxlength(30),
+    name: Joi.string().min(2).max(30),
+    about: Joi.string().min(2).max(30),
     avatar: Joi.string(),
   }),
 }), createUser);

@@ -8,8 +8,8 @@ const {
 router.get('/', getCards);
 router.delete('/:cardId', deleteCard);
 router.post('/', celebrate({
-  body: Joi.object.keys({
-    name: Joi.string().required().minlength(2).maxlength(30),
+  body: Joi.object().keys({
+    name: Joi.string().required().min(2).max(30),
     link: Joi.string().required(),
   }),
 }), createCard);
