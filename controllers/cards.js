@@ -11,9 +11,9 @@ const getCards = async (req, res, next) => {
 };
 
 const createCard = async (req, res, next) => {
-  const { name, link, _id } = req.body;
+  const { name, link } = req.body;
   try {
-    const card = await Card.create({ name, link, owner: _id });
+    const card = await Card.create({ name, link, owner: req.user._id });
     return res.status(201).json(card);
   } catch (err) {
     next(err);
@@ -38,7 +38,6 @@ const deleteCard = async (req, res, next) => {
 };
 const addLikeCard = async (req, res, next) => {
   const { cardId } = req.params;
-  console.log(cardId);
   try {
     const likeCard = await Card.findByIdAndUpdate(
       cardId,
