@@ -41,9 +41,9 @@ const createUser = async (req, res, next) => {
 };
 
 const getInfoAboutMe = async (req, res, next) => {
-  const { _id } = req.body;
+  const { me } = req.params;
   try {
-    const user = await User.findOne({ _id });
+    const user = await User.findOne({ _id: me });
     if (!user) {
       throw new ValidationError('Ошибка получения информации о пользователе');
     }
