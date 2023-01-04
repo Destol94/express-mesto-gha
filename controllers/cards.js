@@ -1,4 +1,5 @@
 const DocumentNotFoundError = require('../errors/DocumentNotFoundError');
+const Unauthorized = require('../errors/Unauthorized');
 const Card = require('../models/card');
 
 const getCards = async (req, res, next) => {
@@ -45,7 +46,7 @@ const addLikeCard = async (req, res, next) => {
       { new: true },
     );
     if (!likeCard) {
-      throw new DocumentNotFoundError('Ошибка добавления лайка');
+      throw new Unauthorized('Ошибка добавления лайка');
     }
     return res.status(201).json(likeCard);
   } catch (err) {
@@ -62,7 +63,7 @@ const removeLikeCard = async (req, res, next) => {
       { new: true },
     );
     if (!emptyLike) {
-      throw new DocumentNotFoundError('Ошибка удаления лайка');
+      throw new Unauthorized('Ошибка удаления лайка');
     }
     return res.status(200).json(emptyLike);
   } catch (err) {
