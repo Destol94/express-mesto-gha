@@ -1,4 +1,5 @@
 const DocumentNotFoundError = require('../errors/DocumentNotFoundError');
+const ForbiddenError = require('../errors/ForbiddenError');
 const Unauthorized = require('../errors/Unauthorized');
 const Card = require('../models/card');
 
@@ -32,7 +33,7 @@ const deleteCard = async (req, res, next) => {
       await Card.findByIdAndRemove(cardId);
       return res.status(200).json(card);
     }
-    throw new Error('Ошибка сервера');
+    throw new ForbiddenError('Ошибка удаления');
   } catch (err) {
     next(err);
   }

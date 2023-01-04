@@ -1,3 +1,4 @@
+const Unauthorized = require('../errors/Unauthorized');
 const { checkToken } = require('../utils/token');
 
 function checkAuth(req, res, next) {
@@ -6,7 +7,7 @@ function checkAuth(req, res, next) {
   if (req.user) {
     return next();
   }
-  return res.status(401).json({ message: 'Доступ запрещён' });
+  throw new Unauthorized('Доступ запрещён');
 }
 
 module.exports = {

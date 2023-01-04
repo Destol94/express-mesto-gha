@@ -9,6 +9,7 @@ const {
 } = require('./controllers/users');
 const { checkAuth } = require('./middlewares/auth');
 const DocumentNotFoundError = require('./errors/DocumentNotFoundError');
+const handlerErrors = require('./utils/handlerErrors');
 
 const { PORT = 3000 } = process.env;
 
@@ -39,13 +40,7 @@ app.use('*', () => {
 app.use(errors());
 // eslint-disable-next-line no-unused-vars
 app.use((err, req, res, next) => {
-  if (err.code === 11000) {
-    return res.status(409).json({ message: 'Такой пользователь уже есть' });
-  }
-  if (!err.statusCode) {
-    return res.status(500).json({ message: ' Ошибка сервера' });
-  }
-  return res.status(err.statusCode).json({ message: err.message });
+  handlerErrors(err, req, res, next);
 });
 
 mongoose.set('strictQuery', true);
