@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 require('dotenv').config();
 const { celebrate, Joi, errors } = require('celebrate');
+const { requestLogger, errorLogger } = require('./middlewares/logger');
 const routerUser = require('./routes/users');
 const routerCard = require('./routes/cards');
 const {
@@ -15,6 +16,8 @@ const { PORT = 3000 } = process.env;
 
 const app = express();
 app.use(express.json());
+
+app.use(requestLogger);
 
 app.use('/users', checkAuth, routerUser);
 app.post('/signin', celebrate({
@@ -37,6 +40,7 @@ app.use('*', () => {
   throw new DocumentNotFoundError('Страница не найдена');
 });
 
+app.use(errorLogger);
 app.use(errors());
 app.use((err, req, res, next) => {
   handlerErrors(err, req, res, next);
