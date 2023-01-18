@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 require('dotenv').config();
 const { celebrate, Joi, errors } = require('celebrate');
+const cors = require('cors');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const routerUser = require('./routes/users');
 const routerCard = require('./routes/cards');
@@ -11,14 +12,16 @@ const {
 const { checkAuth } = require('./middlewares/auth');
 const DocumentNotFoundError = require('./errors/DocumentNotFoundError');
 const handlerErrors = require('./utils/handlerErrors');
+// const handlerCors = require('./middlewares/cors');
 
 const { PORT = 3000 } = process.env;
 
 const app = express();
 app.use(express.json());
 
-app.use(requestLogger);
+app.use(cors());
 
+// app.use(handlerCors);
 app.use('/users', checkAuth, routerUser);
 app.post('/signin', celebrate({
   body: Joi.object().keys({
