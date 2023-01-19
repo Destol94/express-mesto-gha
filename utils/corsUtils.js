@@ -5,7 +5,7 @@ const allowedCors = [
   'http://localhost:3001',
 ];
 const corsOptions = {
-  origin: 'http://project-mesto.nomoredomains.club',
+  origin: allowedCors,
   optionsSuccessStatus: 200,
 };
 
