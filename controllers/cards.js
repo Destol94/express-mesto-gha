@@ -15,7 +15,7 @@ const getCards = async (req, res, next) => {
 const createCard = async (req, res, next) => {
   const { name, link } = req.body;
   try {
-    const card = await Card.create({ name, link, owner: req.user._id });
+    const card = await (await Card.create({ name, link, owner: req.user._id })).populate(['owner', 'likes']);
     return res.status(201).json(card);
   } catch (err) {
     next(err);
@@ -45,7 +45,7 @@ const addLikeCard = async (req, res, next) => {
       cardId,
       { $addToSet: { likes: req.user._id } },
       { new: true },
-    );
+    ).populate(['owner', 'likes']);
     if (!likeCard) {
       throw new Unauthorized('Ошибка добавления лайка');
     }

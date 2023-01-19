@@ -40,9 +40,8 @@ const createUser = async (req, res, next) => {
 };
 
 const getInfoAboutMe = async (req, res, next) => {
-  const { me } = req.params;
   try {
-    const user = await User.findOne({ _id: me });
+    const user = await User.findOne({ _id: req.user._id });
     if (!user) {
       throw new DocumentNotFoundError('Ошибка получения информации о пользователе');
     }
