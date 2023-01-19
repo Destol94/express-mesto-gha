@@ -21,7 +21,7 @@ const app = express();
 app.use(express.json());
 
 app.use(requestLogger);
-app.use(cors());
+app.use(cors(corsOptions));
 
 app.use('/users', checkAuth, routerUser);
 // app.get('/crash-test', () => {
