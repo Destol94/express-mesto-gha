@@ -13,17 +13,22 @@ const {
 const { checkAuth } = require('./middlewares/auth');
 const DocumentNotFoundError = require('./errors/DocumentNotFoundError');
 const handlerErrors = require('./utils/handlerErrors');
-// const handlerCors = require('./middlewares/cors');
+const corsOptions = require('./utils/corsUtils');
 
 const { PORT = 3000 } = process.env;
 
 const app = express();
 app.use(express.json());
 
-app.use(cors());
-// app.use(cookieParser());
+app.use(cors(corsOptions));
+app.use(requestLogger);
 
 app.use('/users', checkAuth, routerUser);
+// app.get('/crash-test', () => {
+//   setTimeout(() => {
+//     throw new Error('Сервер сейчас упадёт');
+//   }, 0);
+// });
 app.post('/signin', celebrate({
   body: Joi.object().keys({
     email: Joi.string().email().required(),
