@@ -1,5 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
+// const cookieParser = require('cookie-parser');
 require('dotenv').config();
 const { celebrate, Joi, errors } = require('celebrate');
 const cors = require('cors');
@@ -20,8 +21,8 @@ const app = express();
 app.use(express.json());
 
 app.use(cors());
+// app.use(cookieParser());
 
-// app.use(handlerCors);
 app.use('/users', checkAuth, routerUser);
 app.post('/signin', celebrate({
   body: Joi.object().keys({

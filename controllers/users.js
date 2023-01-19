@@ -96,6 +96,7 @@ const login = async (req, res, next) => {
     if (result) {
       const token = generateToken({ _id: user._id });
       return res.status(200).json({ token });
+      // return res.status(200).cookie('jwt', token, { maxAge: 3600000 * 1, httpOnly: true });
     }
     throw new Unauthorized('неверный пользоваетель или пароль');
   } catch (err) {
