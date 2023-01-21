@@ -62,7 +62,7 @@ const removeLikeCard = async (req, res, next) => {
       cardId,
       { $pull: { likes: req.user._id } },
       { new: true },
-    );
+    ).populate(['owner', 'likes']);
     if (!emptyLike) {
       throw new Unauthorized('Ошибка удаления лайка');
     }
