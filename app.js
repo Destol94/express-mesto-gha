@@ -1,6 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
-// const cookieParser = require('cookie-parser');
+const cookieParser = require('cookie-parser');
 require('dotenv').config();
 const { celebrate, Joi, errors } = require('celebrate');
 const cors = require('cors');
@@ -18,10 +18,11 @@ const corsOptions = require('./utils/corsUtils');
 const { PORT = 3000 } = process.env;
 
 const app = express();
+app.use(cors(corsOptions));
 app.use(express.json());
 
 app.use(requestLogger);
-app.use(cors(corsOptions));
+app.use(cookieParser());
 
 app.use('/users', checkAuth, routerUser);
 // app.get('/crash-test', () => {

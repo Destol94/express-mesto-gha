@@ -95,8 +95,10 @@ const login = async (req, res, next) => {
     const result = await bcrypt.compare(password, user.password);
     if (result) {
       const token = generateToken({ _id: user._id });
-      return res.status(200).json({ token });
-      // return res.status(200).cookie('jwt', token, { maxAge: 3600000 * 1, httpOnly: true });
+      return res.status(200).cookie('jwt', token, {
+        maxAge: 3600000,
+        httpOnly: true,
+      }).json({ token });
     }
     throw new Unauthorized('неверный пользоваетель или пароль');
   } catch (err) {
